@@ -34,7 +34,7 @@ def replace_event_name(doc, event):
     string = "{EVENT NAME}"
     replace_info(doc, event, string)
 
-def replace_ambassador_name(doc, ambassador):
-    string = "{AMBASSADOR NAME}"
-    replace_info(doc, ambassador, string)
+def replace_event_date(doc, event_date):
+    string = "{EVENT DATE}"
+    replace_info(doc, event_date, string)
 

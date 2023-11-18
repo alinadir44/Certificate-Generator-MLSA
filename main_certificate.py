@@ -37,10 +37,10 @@ def getworkbook(filename):
 def gethtmltemplate(htmltemplatepath=htmltemplatepath):
     return open(htmltemplatepath, "r").read()
 
-def getmail(name, event, ambassador):
-    sub = f"[MLSA] Certificate of Participation for {name}"
+def getmail(name, event):
+    sub = f"{event} | Certificate of Participation for {name}"
     html = gethtmltemplate(htmltemplatepath)
-    body = html.format(name=name, event=event, ambassador=ambassador)
+    body = html.format(name=name, event=event)
     return sub, body
 
 def get_participants(f):
@@ -55,8 +55,10 @@ def create_docx_files(filename, list_participate):
 
     wb, sheet = getworkbook(mailerpath)
 
-    event = input("Enter the event name: ")
-    ambassador = input("Enter Ambassador Name: ")
+    #event = input("Enter the event name: ")
+    event="Digital Presence Power-Up"
+    #event_date = input("Enter Event date. Format -> Month Day(st/th), Year ")
+    event_date = "November 15th, 2023"
 
     for index, participate in enumerate(list_participate):
         # use original file everytime
@@ -67,7 +69,7 @@ def create_docx_files(filename, list_participate):
 
         replace_participant_name(doc, name)
         replace_event_name(doc, event)
-        replace_ambassador_name(doc, ambassador)
+        replace_event_date(doc, event_date)
 
         doc.save('Output/Doc/{}.docx'.format(name))
 
@@ -79,18 +81,18 @@ def create_docx_files(filename, list_participate):
 
         filepath = os.path.abspath('Output/Pdf/{}.pdf'.format(name))
 
-        sub, body = getmail(name, event, ambassador)
+        sub, body = getmail(name, event)
 
         updatemailer(row=index+2, workbook=wb,  sheet=sheet, email=email, filepath=filepath, sub=sub, body=body, status="Send")
 
     
 # get certificate temple path
-certificate_file = "Data/Event Certificate Template.docx"
+certificate_file = "Event Certificate Template.docx"
 # get participants path
-participate_file = "Data/"+("Participant.csv" if (input("Test Mode (Y/N): ").lower())[0]=="n" else "temp.csv")
+participate_file = "Data/"+("Participant List.csv" if (input("Test Mode (Y/N): ").lower())[0]=="n" else "temp.csv")
 
 # get participants
-list_participate = get_participants(participate_file);
+list_participate = get_participants(participate_file)
 
 # process data
 create_docx_files(certificate_file, list_participate)
